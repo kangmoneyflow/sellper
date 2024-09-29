@@ -1,11 +1,11 @@
 {
     "cashdata": 
     {
-        "run_path":"home_path\\Desktop\\캐시데이터3.appref-ms"
+        "path":"home_path\\Desktop\\캐시데이터3.appref-ms"
     },
     "google":
     {
-        "market_info": "https://docs.google.com/spreadsheets/d/1P-EjlvX-K5Nm7Poz9SJPAWJ_XcuVlhLZYYwnlzDZI6E/edit?gid=2124810675#gid=2124810675"
+        "market_login_url": "https://docs.google.com/spreadsheets/d/1P-EjlvX-K5Nm7Poz9SJPAWJ_XcuVlhLZYYwnlzDZI6E/edit?gid=2124810675#gid=2124810675"
     }
 }
   
