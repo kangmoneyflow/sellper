@@ -9,6 +9,10 @@ class Config:
     config_path = os.path.join(base_dir, "config.json")
     config_data = None
     market_login_dict = None
+    cashdata_create_dict = None
+    cashdata_scrap_dict = None
+    cashdata_delete_dict = None
+    cashdata_upload_dict = None
 
     def __new__(cls, *args, **kwargs):
         if cls.config_data is None:
@@ -55,3 +59,69 @@ class Config:
             remaining_data = df.iloc[1:]
             cls.market_login_dict = {first_row_as_keys[col]: list(remaining_data[col]) for col in df.columns}            
         return cls.market_login_dict
+    
+    @classmethod
+    def get_cashdata_create_sheet(cls):
+        if cls.market_login_dict is None:
+            google_auth_json_path  = cls.config_data['google']['path']
+            cashdata_sheet_url = cls.config_data['google']['cashdata_sheet_url']
+            scope = ['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
+            credential = ServiceAccountCredentials.from_json_keyfile_name(google_auth_json_path, scope)
+            gc = gspread.authorize(credential)
+            doc = gc.open_by_url(cashdata_sheet_url)
+            create_sheet = doc.worksheet("생성")
+
+            df_create = pd.DataFrame(create_sheet.get_all_values())   
+
+            first_row_as_keys = df_create.iloc[0]
+            remaining_data = df_create.iloc[1:]
+            cls.cashdata_create_dict = {first_row_as_keys[col]: list(remaining_data[col]) for col in df_create.columns}            
+        return cls.cashdata_create_dict          
+   
+    @classmethod
+    def get_cashdata_scrap_sheet(cls):
+        if cls.market_login_dict is None:
+            google_auth_json_path  = cls.config_data['google']['path']
+            cashdata_sheet_url = cls.config_data['google']['cashdata_sheet_url']
+            scope = ['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
+            credential = ServiceAccountCredentials.from_json_keyfile_name(google_auth_json_path, scope)
+            gc = gspread.authorize(credential)
+            doc = gc.open_by_url(cashdata_sheet_url)
+            scrap_sheet = doc.worksheet("수집")
+            df_scrap = pd.DataFrame(scrap_sheet.get_all_values())   
+            first_row_as_keys = df_scrap.iloc[0]
+            remaining_data = df_scrap.iloc[1:]
+            cls.cashdata_scrap_dict = {first_row_as_keys[col]: list(remaining_data[col]) for col in df_scrap.columns}            
+        return cls.cashdata_scrap_dict
+
+    @classmethod
+    def get_cashdata_delete_sheet(cls):
+        if cls.market_login_dict is None:
+            google_auth_json_path  = cls.config_data['google']['path']
+            cashdata_sheet_url = cls.config_data['google']['cashdata_sheet_url']
+            scope = ['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
+            credential = ServiceAccountCredentials.from_json_keyfile_name(google_auth_json_path, scope)
+            gc = gspread.authorize(credential)
+            doc = gc.open_by_url(cashdata_sheet_url)
+            delete_sheet = doc.worksheet("삭제")
+            df_delete = pd.DataFrame(delete_sheet.get_all_values())   
+            first_row_as_keys = df_delete.iloc[0]
+            remaining_data = df_delete.iloc[1:]
+            cls.cashdata_delete_dict = {first_row_as_keys[col]: list(remaining_data[col]) for col in df_delete.columns}            
+        return cls.cashdata_delete_dict          
+
+    @classmethod
+    def get_cashdata_upload_sheet(cls):
+        if cls.market_login_dict is None:
+            google_auth_json_path  = cls.config_data['google']['path']
+            cashdata_sheet_url = cls.config_data['google']['cashdata_sheet_url']
+            scope = ['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
+            credential = ServiceAccountCredentials.from_json_keyfile_name(google_auth_json_path, scope)
+            gc = gspread.authorize(credential)
+            doc = gc.open_by_url(cashdata_sheet_url)
+            upload_sheet = doc.worksheet("업로드")
+            df_upload = pd.DataFrame(upload_sheet.get_all_values())   
+            first_row_as_keys = df_upload.iloc[0]
+            remaining_data = df_upload.iloc[1:]
+            cls.cashdata_upload_dict = {first_row_as_keys[col]: list(remaining_data[col]) for col in df_upload.columns}            
+        return cls.cashdata_upload_dict                      
