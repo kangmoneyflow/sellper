@@ -1,23 +1,11 @@
-from pywinauto import findwindows
-from pywinauto import application
-import pyautogui
-import time
-# for data processing
-import pandas as pd
-# information
 import os
-import datetime
-import logging
-import sys
+import time
+import pyautogui
 import pyperclip
-
-import json
-from oauth2client.service_account import ServiceAccountCredentials
-import gspread
-import pandas as pd
-
-from config import *
+from pywinauto import findwindows, application
+from config import Config
 from util import setup_logger
+
 logger = setup_logger(__name__)
 
 TIME_DELAY_1 = 1
@@ -25,55 +13,46 @@ TIME_DELAY_2 = 2
 TIME_DELAY_5 = 5
 TIME_DELAY_10 = 10
 
-class CashData():
+class CashData:
     def __init__(self):
         self.config = Config()
         self.run_path = self.config.config_data['cashdata']['path']
-        self.open_num = 1
         self.app = None
 
     def run_cashdata(self):
-        #프로그램 실행
-        logger.info(f"Cashdata 실행:{self.run_path}")
+        logger.info(f"Cashdata 실행: {self.run_path}")
         os.system(self.run_path)
         time.sleep(TIME_DELAY_2)
-        #process pid 값 가져오기
-        proc_pid = self.get_pid()
-        logger.info(f"Cashdata PID={proc_pid}")
-        if proc_pid is None:
-            assert 0
-        #로그인 버튼 누르기 
+
+        proc_pid = self._get_pid()
+        logger.info(f"Cashdata PID: {proc_pid}")
+        if not proc_pid:
+            raise Exception("Cashdata 프로세스를 찾을 수 없습니다.")
+        
         logger.info("Cashdata Login 버튼 클릭")
-        self.login_click(proc_pid)
-        #pid <-> proc name 연결
-        logger.info("Cashdata PID <-> PROC Name 연결")
-        proc_name = self.find_procname_with_pid(proc_pid)
-        logger.info(f"Cashdata proc name {proc_name}")
-        if proc_name is None:
-            assert 0
-        #app 연결
-        logger.info("Cashdata App Connection with proc_name")
-        self.app = self.connect_app(proc_pid, proc_name)
+        self._login_click(proc_pid)
+
+        proc_name = self._find_procname_with_pid(proc_pid)
+        logger.info(f"Cashdata 프로세스 이름: {proc_name}")
+        if not proc_name:
+            raise Exception("프로세스 이름을 찾을 수 없습니다.")
+
+        self.app = self._connect_app(proc_pid, proc_name)
         return self.app
 
-    def get_curr_process(self):
+    def _get_curr_process(self):
         return findwindows.find_elements()
 
-    def get_pid(self):
-        i=0
-        while True:
-            if i == 10:
-                break
-            i = i + 1
+    def _get_pid(self):
+        for _ in range(10):
             time.sleep(TIME_DELAY_2)
-            procs = self.get_curr_process()
+            procs = self._get_curr_process()
             for proc in procs:
                 if "로그인" in proc.name:
-                    pid = proc.process_id
-                    return pid
+                    return proc.process_id
         return None
 
-    def login_click(self, pid):
+    def _login_click(self, pid):
         app = application.Application(backend="uia")
         app.connect(process=pid)
         dlg = app['로그인']
@@ -81,37 +60,29 @@ class CashData():
         login_wrap.click()
         time.sleep(TIME_DELAY_5)
 
-    def find_procname_with_pid(self, pid):
-        # 로그인 되어 있는 캐시 창에서 메뉴 창 보고 pid와 id 매칭 dict 만들기 
-        i=0 
-        while True:
-            if i == 10:
-                break
-            i = i + 1
+    def _find_procname_with_pid(self, pid):
+        for _ in range(10):
             time.sleep(TIME_DELAY_2)
-            procs = self.get_curr_process()
+            procs = self._get_curr_process()
             for proc in procs:
-                if pid == proc.process_id and str(pid) in proc.name:            
-                    a = "{} / {}".format(proc.name, proc.process_id)
-                    logger.info(f"PROC Name {proc.name}")
+                if pid == proc.process_id and str(pid) in proc.name:
+                    logger.info(f"프로세스 이름: {proc.name}")
                     return proc.name
         return None
-
-    def connect_app(self, proc_pid, proc_name):
+    
+    def _connect_app(self, proc_pid, proc_name):
         app = application.Application(backend="uia")
-        app.connect(process = proc_pid)
-        dlg = app[proc_name] #다이얼로그 접속
-
-        obj = dlg.child_window(auto_id="base", control_type="Custom").wrapper_object() #처음에 로그인하면, 뜨는 업로드 마켓 로그인 obj
-        obj.type_keys("{ESC}") #esc 누르면 꺼짐
+        app.connect(process=proc_pid)
+        dlg = app[proc_name]
+        dlg.child_window(auto_id="base", control_type="Custom").wrapper_object().type_keys("{ESC}")
         time.sleep(TIME_DELAY_2)
         try:
-            obj = dlg.child_window(title="", control_type="Button").wrapper_object() # 캐시창 최대화 버튼, # ['\ue922Button', 'Button4', '\ue922', '\ue9220', '\ue9221']
-            obj.click_input() #캐시창 최대화
+            dlg.child_window(title="", control_type="Button").wrapper_object().click_input()
             time.sleep(TIME_DELAY_2)
-        except:
+        except Exception:
             pass
         return app
+
     
     def click_menu(self, num):
         logger.info(f"Click menu num : {num}")
@@ -157,18 +128,17 @@ class CashData():
     def click_check_box(self, type):
         if type == 0: # True -> False
             try:
-                obj_dlg_all_click = self.app.dlg.child_window(title="System.Windows.Controls.CheckBox Content: IsChecked:True", control_type="HeaderItem").wrapper_object()
-                obj_dlg_all_click.click_input() #체크 박스 클릭해서 전체 수집리스트 True -> False로 변경
+                #체크 박스 클릭해서 전체 수집리스트 True -> False로 변경
+                self.app.dlg.child_window(title="System.Windows.Controls.CheckBox Content: IsChecked:True", control_type="HeaderItem").wrapper_object().click_input()
             except:
                 try:
-                    obj_dlg_all_click = self.app.dlg.child_window(title="System.Windows.Controls.CheckBox Content: IsChecked:null", control_type="HeaderItem").wrapper_object()
-                    obj_dlg_all_click.click_input() #체크 박스 클릭해서 전체 수집리스트 True -> False로 변경
+                    #체크 박스 클릭해서 전체 수집리스트 True -> False로 변경
+                    self.app.dlg.child_window(title="System.Windows.Controls.CheckBox Content: IsChecked:null", control_type="HeaderItem").wrapper_object().click_input() 
                 except:
                     pass
         else: #False -> True
             try:
-                obj_dlg_all_click = self.app.dlg.child_window(title="System.Windows.Controls.CheckBox Content: IsChecked:False", control_type="HeaderItem").wrapper_object()
-                obj_dlg_all_click.click_input() #체크 박스 클릭해서 전체 수집리스트 클릭 Falst -> True로 변경
+                self.app.dlg.child_window(title="System.Windows.Controls.CheckBox Content: IsChecked:False", control_type="HeaderItem").wrapper_object().click_input()
             except:
                 pass                    
 
@@ -295,7 +265,7 @@ class CashData():
         self.click_sccuess()
         time.sleep(TIME_DELAY_1)
 
-    def run_update_market_infoself(self, target_name, pw):
+    def run_update_market_info(self, target_name, pw):
         self.click_login_list() #로그인창 누르기
         self.click_check_box(0) #로그인 체크박스 전체 해제
         self.click_search_text()
