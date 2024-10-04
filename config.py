@@ -3,9 +3,13 @@ import os
 from oauth2client.service_account import ServiceAccountCredentials
 import gspread
 import pandas as pd
+from util import setup_logger
+logger = setup_logger(__name__)
+
 
 class Config:
-    base_dir = os.path.dirname(os.path.abspath(__file__))
+    base_dir = "./"
+    # config_path = os.path.join(base_dir, "config.json")
     config_path = os.path.join(base_dir, "config.json")
     config_data = None
     market_login_dict = None
@@ -16,6 +20,7 @@ class Config:
 
     def __new__(cls, *args, **kwargs):
         if cls.config_data is None:
+            logger.info("Config Class Initialization")
             cls._initialize()
         return super(Config, cls).__new__(cls)
 
@@ -27,11 +32,12 @@ class Config:
                 config_data['cashdata']['path'] = config_data['cashdata']['path'].replace('home_path', os.path.expanduser('~'))
                 cls.config_data = config_data  # 클래스 변수에 설정 데이터를 저장
                 cls.config_data['google']['path'] = os.path.join(cls.base_dir, "google_auth.json")
+                logger.info(cls.config_data)
         except FileNotFoundError:
-            print(f"Error: {cls.config_path} / config.json 파일을 찾을 수 없습니다.")
+            logger.info(f"Error: {cls.config_path} / config.json 파일을 찾을 수 없습니다.")
             cls.config_data = None
         except json.JSONDecodeError:
-            print(f"Error: {cls.config_path} / JSON 파일 형식이 올바르지 않습니다.")
+            logger.info(f"Error: {cls.config_path} / JSON 파일 형식이 올바르지 않습니다.")
             cls.config_data = None
 
     @classmethod
@@ -58,11 +64,12 @@ class Config:
             first_row_as_keys = df.iloc[0]
             remaining_data = df.iloc[1:]
             cls.market_login_dict = {first_row_as_keys[col]: list(remaining_data[col]) for col in df.columns}            
+            logger.info("get_market_login_info")
         return cls.market_login_dict
     
     @classmethod
     def get_cashdata_create_sheet(cls):
-        if cls.market_login_dict is None:
+        if cls.cashdata_create_dict is None:
             google_auth_json_path  = cls.config_data['google']['path']
             cashdata_sheet_url = cls.config_data['google']['cashdata_sheet_url']
             scope = ['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
@@ -76,11 +83,12 @@ class Config:
             first_row_as_keys = df_create.iloc[0]
             remaining_data = df_create.iloc[1:]
             cls.cashdata_create_dict = {first_row_as_keys[col]: list(remaining_data[col]) for col in df_create.columns}            
+            logger.info("get_cashdata_create_sheet")
         return cls.cashdata_create_dict          
    
     @classmethod
     def get_cashdata_scrap_sheet(cls):
-        if cls.market_login_dict is None:
+        if cls.cashdata_scrap_dict is None:
             google_auth_json_path  = cls.config_data['google']['path']
             cashdata_sheet_url = cls.config_data['google']['cashdata_sheet_url']
             scope = ['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
@@ -92,11 +100,12 @@ class Config:
             first_row_as_keys = df_scrap.iloc[0]
             remaining_data = df_scrap.iloc[1:]
             cls.cashdata_scrap_dict = {first_row_as_keys[col]: list(remaining_data[col]) for col in df_scrap.columns}            
+            logger.info("get_cashdata_scrap_sheet")
         return cls.cashdata_scrap_dict
 
     @classmethod
     def get_cashdata_delete_sheet(cls):
-        if cls.market_login_dict is None:
+        if cls.cashdata_delete_dict is None:
             google_auth_json_path  = cls.config_data['google']['path']
             cashdata_sheet_url = cls.config_data['google']['cashdata_sheet_url']
             scope = ['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
@@ -108,11 +117,12 @@ class Config:
             first_row_as_keys = df_delete.iloc[0]
             remaining_data = df_delete.iloc[1:]
             cls.cashdata_delete_dict = {first_row_as_keys[col]: list(remaining_data[col]) for col in df_delete.columns}            
+            logger.info("get_cashdata_delete_sheet")
         return cls.cashdata_delete_dict          
 
     @classmethod
     def get_cashdata_upload_sheet(cls):
-        if cls.market_login_dict is None:
+        if cls.cashdata_upload_dict is None:
             google_auth_json_path  = cls.config_data['google']['path']
             cashdata_sheet_url = cls.config_data['google']['cashdata_sheet_url']
             scope = ['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
@@ -124,4 +134,5 @@ class Config:
             first_row_as_keys = df_upload.iloc[0]
             remaining_data = df_upload.iloc[1:]
             cls.cashdata_upload_dict = {first_row_as_keys[col]: list(remaining_data[col]) for col in df_upload.columns}            
+            logger.info("get_cashdata_upload_sheet")
         return cls.cashdata_upload_dict                      
