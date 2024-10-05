@@ -300,7 +300,7 @@ class CashData:
         self.app.dlg.child_window(title="수집 이름을 설정해주세요.", control_type="Text").wrapper_object().click_input()
         self.remove_curr_text()
         list_name = create_option['list_name']
-        tmp = create_option['price_filter'].replace("-", "to")
+        tmp = create_option['price_filter']
         list_name = f"{list_name}{tmp}/{create_option['price_type']}"
         self.copy_and_paste(list_name)
 
@@ -335,8 +335,7 @@ class CashData:
         price_high = ""
         price_interval = ""
         if create_option['price_filter'] != "-": 
-            price_row = create_option['price_filter'].split('-')[0]
-            price_high = create_option['price_filter'].split('-')[1]
+            price_row, price_high = create_option['price_filter'].split('to')
             price_interval = int((int(price_high)-int(price_row)))//2
         self.remove_curr_text()
         self.copy_and_paste(price_row)         

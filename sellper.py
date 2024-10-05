@@ -89,28 +89,25 @@ class Worker(QThread):
         for i in range(start_, end_ + 1):
             logger.info(f"  [{i+2}] {dict_['리스트명'][i]}")
             price_types = ['주문', '일치', '가격']
-            price_filters = ['가격필터1', '가격필터2']
-            for i in range(len(price_types)):
-                price_type = price_types[i]
+            for j in range(len(price_types)):
+                price_type = price_types[j]
                 if dict_[price_type][i].upper() == 'X': continue
-                for price_filter_key in price_filters:
-                    price_filter = dict_[price_filter_key][i]
-                    create_option = {
-                        'url': dict_['URL'][i],
-                        'list_name': dict_['리스트명'][i],
-                        'category_name': dict_['카테고리'][i],
-                        'tag_name': dict_['검색태그'][i],
-                        'price_type': price_type,
-                        'price_filter': price_filter,
-                        'page_start': dict_['시작페이지'][i],
-                        'page_end': dict_['마지막페이지'][i],
-                        'num_scrap': dict_['수집개수'][i],
-                        'exchange_rate': dict_['환율'][i],
-                        'plus_rate': dict_['추가금액비율'][i],
-                        'plus_money': dict_['추가금액'][i]
-                    }
-                    logger.info(f"  생성옵션: {create_option}")
-                    cashdata.run_create_list(create_option)
+                create_option = {
+                    'url': dict_['URL'][i],
+                    'list_name': dict_['리스트명'][i],
+                    'category_name': dict_['카테고리'][i],
+                    'tag_name': dict_['검색태그'][i],
+                    'price_type': price_type,
+                    'price_filter': dict_['가격필터'][i],
+                    'page_start': dict_['시작페이지'][i],
+                    'page_end': dict_['마지막페이지'][i],
+                    'num_scrap': dict_['수집개수'][i],
+                    'exchange_rate': dict_['환율'][i],
+                    'plus_rate': dict_['추가금액비율'][i],
+                    'plus_money': dict_['추가금액'][i]
+                }
+                logger.info(f"  생성옵션: {create_option}")
+                cashdata.run_create_list(create_option)
 
     def _run_scrap(self):
         dict_ = config.get_cashdata_scrap_sheet()
@@ -137,8 +134,8 @@ class Worker(QThread):
             cashdata.run_cashdata()
             target_name = f"{dict_['사업자'][i]}번_{dict_['마켓'][i]}_{login_dict['계정정보'][int(dict_['사업자'][i])-1]}"
             logger.info(f"  로그인: {target_name}")            
-            cashdata.run_market_login(target_name)            
-            target_list_name = dict_['리스트명'][i]
+            cashdata.run_market_login(target_name)
+            target_list_name = f"{dict_['리스트명'][i]}"
             logger.info(f"  스프레드시트[{i+2}] {target_list_name}")                        
             cashdata.run_upload(target_list_name)
 
