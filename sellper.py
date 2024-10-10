@@ -7,6 +7,7 @@ from libcashdata import *
 from dataclasses import dataclass
 from util import setup_logger
 from sellper_ui import Ui_widget
+from liblogin import LOGIN
 
 logger = setup_logger(__name__)
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -144,11 +145,23 @@ class WindowClass(QMainWindow, Ui_widget):
         super().__init__()
         self.setupUi(self)
         self.menu = {"type": None, "select": None}
-
+        self.login = {"id":None, "pw":None, "success":False}
+        self.pushButton_login.clicked.connect(self.handle_login)
         # 라디오 버튼 이벤트 연결
         self._connect_radio_buttons()
         self.pushButton_run.clicked.connect(self.run_main)
         self.worker = None
+        
+    def handle_login(self):
+        user_id = self.lineEdit_id.text()
+        user_pw = self.lineEdit_pw.text()
+        login = LOGIN()
+        if login.verify_login(user_id, user_pw):
+            self.login = {"id":user_id, "pw":user_pw, "success":True}
+            QMessageBox.information(self, "로그인", "로그인 성공")
+        else:
+            self.login = {"id":user_id, "pw":user_pw, "success":False}
+            QMessageBox.information(self, "로그인", "로그인 실패")
 
     def _connect_radio_buttons(self):
         self.radioButton_open_n.clicked.connect(self.choose_menu)
@@ -159,6 +172,9 @@ class WindowClass(QMainWindow, Ui_widget):
         self.radioButton_upload_market.clicked.connect(self.choose_menu)
 
     def choose_menu(self):
+        if not self.login["success"]:
+            QMessageBox.information(self, "로그인", "로그인이 필요합니다.")
+            return
         if self.radioButton_open_n.isChecked():
             logger.info("자동 N개 실행 선택")
             self.menu = {"type": TYPE.CASH, "select": SELECT.OPEN_N}
@@ -185,10 +201,12 @@ class WindowClass(QMainWindow, Ui_widget):
             self.tabWidget.setCurrentIndex(6)            
 
     def run_main(self):
+        if not self.login["success"]:
+            QMessageBox.information(self, "로그인", "로그인이 필요합니다.")
+            return        
         if not self.menu["select"] or not self.menu['type']:
             logger.info(f"작업을 선택해 주세요.: type:{self.menu['type']} select:{self.menu['select']}")
             return
-
         if self.worker is not None and self.worker.isRunning():
             logger.info("이미 실행 중인 작업이 있습니다.")
             return
