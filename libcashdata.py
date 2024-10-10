@@ -252,6 +252,46 @@ class CashData:
         pyautogui.hotkey('ctrl', 'v')
         time.sleep(TIME_DELAY_1)
 
+    def set_market_id(self, market_type, market_id):
+        # 잠금 옵션 -> 전체 상품 클릭 후 탭으로 이동
+        obj = self.app.dlg.child_window(title="전체 상품", control_type="RadioButton").wrapper_object()
+        obj.click_input()
+
+        # 탭 두 번 이동
+        for _ in range(2):
+            pyautogui.hotkey('shift', 'tab')
+
+        # 마켓 타입에 따라 횟수 결정
+        market_type_to_index = {
+            "티몬": 1,
+            "위메프": 2,
+            "쿠팡": 3,
+            "인터파크": 4,
+            "G마켓": 5,
+            "옥션": 6,
+            "11번가글로벌": 7,
+            "11번가": 8,
+            "스토어팜": 9,
+            "롯데온": 10
+        }
+
+        if market_type in market_type_to_index:
+            index = market_type_to_index[market_type]
+            pyautogui.press('down', presses=index)  # 해당 마켓에 맞는 횟수만큼 'down' 키를 입력
+            time.sleep(0.5)
+
+            # 마켓에 맞는 아이디 정하기
+            pyautogui.press('tab')
+            time.sleep(0.5)
+            pyautogui.write(market_id)
+        else:
+            print("Invalid market type")
+
+    def _delete_target_market(self, market_type, market_id):
+        self.click_upload_list()
+        self.change_item_num(10) #전체 -> 1만개로 변경
+        self.set_market_id(market_type, market_id)
+
     def run_market_login(self, target_name):
         self.click_login_list() #로그인창 누르기
         self.click_check_box(0) #로그인 체크박스 전체 해제        
@@ -400,8 +440,8 @@ class CashData:
         time.sleep(TIME_DELAY_2)
         
 
-    def run_delete(self, market):
-        pass
+    def run_delete(self, market_type, market_id):
+        self._delete_target_market(self, market_type, market_id)
 
     def run_upload(self, target_list_name):
         self.click_wait_list()

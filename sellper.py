@@ -122,7 +122,24 @@ class Worker(QThread):
             cashdata.run_scrap(dict_['리스트명'][i])
 
     def _delete(self):
-        logger.info("삭제: 현재 제공하지 않는 기능")
+        dict_ = config.get_market_login_info()
+        start_ = self.param.param_1 - 1
+        end_ = self.param.param_2 - 1
+        logger.info(f"연동 삭제 사업자 시작: {self.param.param_1} - 종료: {self.param.param_2}")
+        
+        for i in range(start_, end_ + 1):
+            for market in self.param.market_dict:
+                if self.param.market_dict[market]:
+                    cashdata = CashData()
+                    cashdata.run_cashdata()
+                    nickname = dict_['계정정보'][i]
+                    market_id, market_pw = dict_[market][i].split('\n')
+                    target_name = f"{i+1}번_{market}_{nickname}"
+                    logger.info(f"  로그인: {target_name}") 
+                    cashdata.run_market_login(target_name)
+                    cashdata.run_delete(market, market_id)
+                    
+
 
     def _upload_list(self):
         dict_ = config.get_cashdata_upload_sheet()
@@ -227,7 +244,7 @@ class WindowClass(QMainWindow, Ui_widget):
 
         if self.menu["select"] is SELECT.OPEN_N:
             param.param_1 = self.sel_1_num.value()
-        elif self.menu["select"] is SELECT.UPDATE_MARKET:
+        elif self.menu["select"] is {SELECT.UPDATE_MARKET, SELECT.DELETE}:
             param.param_1 = self.sel_2_start.value()
             param.param_2 = self.sel_2_end.value()
             self._update_market_dict(param)
