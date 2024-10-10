@@ -13,13 +13,7 @@ class Config:
     config_data = None
     
     # 각 데이터 시트에 대한 저장 변수
-    market_login_dict = None
     cashdata_sheets_dict = {}
-
-    cashdata_create_dict = None
-    cashdata_scrap_dict = None
-    cashdata_delete_dict = None
-    cashdata_upload_dict = None
 
     def __new__(cls, *args, **kwargs):
         if cls.config_data is None:
@@ -65,14 +59,6 @@ class Config:
         first_row_as_keys = df.iloc[0]
         remaining_data = df.iloc[1:]
         return {first_row_as_keys[col]: list(remaining_data[col]) for col in df.columns}
-
-    @classmethod
-    def get_market_login_info(cls):
-        if cls.market_login_dict is None:
-            logger.info("Market login information loaded")
-            market_login_sheet_url = cls.config_data['google']['market_login_url']
-            cls.market_login_dict = cls._get_google_sheet(market_login_sheet_url, "종합")
-        return cls.market_login_dict
     
     @classmethod
     def _get_cashdata_sheet(cls, sheet_type):
@@ -81,6 +67,10 @@ class Config:
             cls.cashdata_sheets_dict[sheet_type] = cls._get_google_sheet(cashdata_sheet_url, sheet_type)
             logger.info(f"{sheet_type} sheet loaded")
         return cls.cashdata_sheets_dict[sheet_type]
+
+    @classmethod
+    def get_market_login_info(cls):
+        return cls._get_cashdata_sheet("계정")        
 
     @classmethod
     def get_cashdata_create_sheet(cls):
