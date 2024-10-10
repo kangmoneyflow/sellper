@@ -25,7 +25,6 @@ class LOGIN:
     def _get_google_sheet(cls, sheet_url, sheet_name):
         # 임시 JSON 파일 생성
         google_auth_data = {
-
         }
 
         with tempfile.NamedTemporaryFile(mode='w+', delete=False, suffix='.json') as temp_file:
@@ -61,10 +60,13 @@ class LOGIN:
     @classmethod
     def verify_login(cls, user_id, password):
         login_data = cls._get_login_sheet("계정관리")
-        if user_id in login_data and login_data[user_id]['비밀번호'] == password:
+        if (
+            user_id in login_data
+            and login_data[user_id]['비밀번호'] == password
+            and login_data[user_id]['승인'].upper() == 'O'
+        ):
             logger.info("Login successful")
             return True
         else:
             logger.warning("Login failed")
             return False
-        

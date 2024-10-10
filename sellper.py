@@ -143,6 +143,7 @@ class Worker(QThread):
 class WindowClass(QMainWindow, Ui_widget):
     def __init__(self):
         super().__init__()
+        self.clslogin = LOGIN()
         self.setupUi(self)
         self.menu = {"type": None, "select": None}
         self.login = {"id":None, "pw":None, "success":False}
@@ -151,12 +152,10 @@ class WindowClass(QMainWindow, Ui_widget):
         self._connect_radio_buttons()
         self.pushButton_run.clicked.connect(self.run_main)
         self.worker = None
-        
     def handle_login(self):
         user_id = self.lineEdit_id.text()
         user_pw = self.lineEdit_pw.text()
-        login = LOGIN()
-        if login.verify_login(user_id, user_pw):
+        if self.clslogin.verify_login(user_id, user_pw):
             self.login = {"id":user_id, "pw":user_pw, "success":True}
             QMessageBox.information(self, "로그인", "로그인 성공")
         else:
