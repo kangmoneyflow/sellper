@@ -12,6 +12,7 @@ TIME_DELAY_1 = 1
 TIME_DELAY_2 = 2
 TIME_DELAY_5 = 5
 TIME_DELAY_10 = 10
+TIME_DELAY_60 = 60
 
 class CashData:
     def __init__(self):
@@ -288,12 +289,6 @@ class CashData:
             print("Invalid market type")
         time.sleep(1)
 
-    def _delete_target_market(self, market_type, market_id):
-        self.click_upload_list()
-        self.change_item_num(10) #전체 -> 1만개로 변경
-        self.set_market_id(market_type, market_id)
-        self.click_search_button()
-
     def run_market_login(self, target_name):
         self.click_login_list() #로그인창 누르기
         self.click_check_box(0) #로그인 체크박스 전체 해제        
@@ -441,9 +436,18 @@ class CashData:
         self.click_start()
         time.sleep(TIME_DELAY_2)
         
-
     def run_delete(self, market_type, market_id):
-        self._delete_target_market(market_type, market_id)
+        self.click_upload_list()
+        self.change_item_num(10) #전체 -> 1만개로 변경
+        self.set_market_id(market_type, market_id)
+        self.click_search_button()
+        time.sleep(TIME_DELAY_60)
+        self.click_check_box(1) #체크박스 전체 선택
+        time.sleep(1)
+        self.app.dlg.child_window(title="오픈마켓 연동 삭제", control_type="Text").wrapper_object().click_input()
+        time.sleep(1)
+        self.app.dlg.child_window(title="시작", control_type="Button").wrapper_object().click_input()
+        time.sleep(1)
 
     def run_upload(self, target_list_name):
         self.click_wait_list()
