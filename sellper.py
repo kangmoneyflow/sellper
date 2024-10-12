@@ -138,8 +138,6 @@ class Worker(QThread):
                     logger.info(f"  로그인: {target_name}") 
                     cashdata.run_market_login(target_name)
                     cashdata.run_delete(market, market_id)
-                    
-
 
     def _upload_list(self):
         dict_ = config.get_cashdata_upload_sheet()
@@ -244,23 +242,31 @@ class WindowClass(QMainWindow, Ui_widget):
 
         if self.menu["select"] is SELECT.OPEN_N:
             param.param_1 = self.sel_1_num.value()
-        elif self.menu["select"] is {SELECT.UPDATE_MARKET, SELECT.DELETE}:
-            param.param_1 = self.sel_2_start.value()
-            param.param_2 = self.sel_2_end.value()
-            self._update_market_dict(param)
-        elif self.menu["select"] in {SELECT.CREATE_LIST, SELECT.SCRAP, SELECT.UPLOAD}:
+        # elif self.menu["select"] is {SELECT.UPDATE_MARKET, SELECT.DELETE}:
+        #     param.param_1 = self.sel_2_start.value()
+        #     param.param_2 = self.sel_2_end.value()
+        #     self._update_market_dict(param)
+        elif self.menu["select"] in {SELECT.CREATE_LIST, SELECT.SCRAP, SELECT.UPLOAD, SELECT.UPDATE_MARKET, SELECT.DELETE}:
             param.param_1 = getattr(self, f"sel_{self.menu['select'].value}_start").value()
             param.param_2 = getattr(self, f"sel_{self.menu['select'].value}_end").value()
+
+        if self.menu["select"] in {SELECT.UPDATE_MARKET, SELECT.DELETE}:
+            self._update_market_dict(param)
 
         return param
 
     def _update_market_dict(self, param):
-        param.market_dict["스마트스토어"] = self.checkBox_ss.isChecked()
-        param.market_dict["쿠팡"] = self.checkBox_cp.isChecked()
-        param.market_dict["지마켓"] = self.checkBox_g.isChecked()
-        param.market_dict["옥션"] = self.checkBox_a.isChecked()
-        param.market_dict["11번가"] = self.checkBox_st11.isChecked()
-        param.market_dict["롯데온"] = self.checkBox_l.isChecked()
+        markets = {
+            "스마트스토어": "ss",
+            "쿠팡": "cp",
+            "지마켓": "g",
+            "옥션": "a",
+            "11번가": "st11",
+            "롯데온": "l"
+        }
+        for market_name, suffix in markets.items():
+            checkbox_name = f"checkBox_{self.menu['select'].value}_{suffix}"
+            param.market_dict[market_name] = getattr(self, checkbox_name).isChecked()        
 
     def on_worker_finished(self):
         logger.info("작업이 완료되었습니다.")

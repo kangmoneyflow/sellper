@@ -26,7 +26,6 @@ class LOGIN:
         # 임시 JSON 파일 생성
         google_auth_data = {
         }
-
         with tempfile.NamedTemporaryFile(mode='w+', delete=False, suffix='.json') as temp_file:
             json.dump(google_auth_data, temp_file)
             temp_file_path = temp_file.name

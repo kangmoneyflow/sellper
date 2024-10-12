@@ -387,7 +387,7 @@
       <number>1</number>
      </property>
     </widget>
-    <widget class="QCheckBox" name="checkBox_ss">
+    <widget class="QCheckBox" name="checkBox_2_ss">
      <property name="geometry">
       <rect>
        <x>230</x>
@@ -400,7 +400,7 @@
       <string>스마트스토어</string>
      </property>
     </widget>
-    <widget class="QCheckBox" name="checkBox_cp">
+    <widget class="QCheckBox" name="checkBox_2_cp">
      <property name="geometry">
       <rect>
        <x>230</x>
@@ -413,7 +413,7 @@
       <string>쿠팡</string>
      </property>
     </widget>
-    <widget class="QCheckBox" name="checkBox_g">
+    <widget class="QCheckBox" name="checkBox_2_g">
      <property name="geometry">
       <rect>
        <x>230</x>
@@ -426,7 +426,7 @@
       <string>지마켓</string>
      </property>
     </widget>
-    <widget class="QCheckBox" name="checkBox_a">
+    <widget class="QCheckBox" name="checkBox_2_a">
      <property name="geometry">
       <rect>
        <x>230</x>
@@ -439,7 +439,7 @@
       <string>옥션</string>
      </property>
     </widget>
-    <widget class="QCheckBox" name="checkBox_st11">
+    <widget class="QCheckBox" name="checkBox_2_st11">
      <property name="geometry">
       <rect>
        <x>230</x>
@@ -452,7 +452,7 @@
       <string>11번가</string>
      </property>
     </widget>
-    <widget class="QCheckBox" name="checkBox_l">
+    <widget class="QCheckBox" name="checkBox_2_l">
      <property name="geometry">
       <rect>
        <x>230</x>

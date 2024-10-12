@@ -267,7 +267,7 @@ class CashData:
             "위메프": 2,
             "쿠팡": 3,
             "인터파크": 4,
-            "G마켓": 5,
+            "지마켓": 5,
             "옥션": 6,
             "11번가글로벌": 7,
             "11번가": 8,
@@ -286,11 +286,13 @@ class CashData:
             pyautogui.write(market_id)
         else:
             print("Invalid market type")
+        time.sleep(1)
 
     def _delete_target_market(self, market_type, market_id):
         self.click_upload_list()
         self.change_item_num(10) #전체 -> 1만개로 변경
         self.set_market_id(market_type, market_id)
+        self.click_search_button()
 
     def run_market_login(self, target_name):
         self.click_login_list() #로그인창 누르기
@@ -441,7 +443,7 @@ class CashData:
         
 
     def run_delete(self, market_type, market_id):
-        self._delete_target_market(self, market_type, market_id)
+        self._delete_target_market(market_type, market_id)
 
     def run_upload(self, target_list_name):
         self.click_wait_list()
