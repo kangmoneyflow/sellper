@@ -4,6 +4,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 import gspread
 import pandas as pd
 from util import setup_logger
+import tempfile
 
 logger = setup_logger(__name__)
 
@@ -27,7 +28,7 @@ class Config:
             with open(cls.config_path, 'r', encoding='utf-8') as f:
                 config_data = json.load(f)
                 config_data['cashdata']['path'] = config_data['cashdata']['path'].replace('home_path', os.path.expanduser('~'))
-                config_data['google']['path'] = os.path.join(cls.base_dir, "google_auth.json")
+                # config_data['google']['path'] = os.path.join(cls.base_dir, "google_auth.json")
                 cls.config_data = config_data
         except FileNotFoundError:
             logger.error(f"Error: {cls.config_path} / config.json 파일을 찾을 수 없습니다.")
@@ -49,9 +50,14 @@ class Config:
 
     @classmethod
     def _get_google_sheet(cls, sheet_url, sheet_name):
-        google_auth_json_path = cls.config_data['google']['path']
+        google_auth_data = {
+        }
+        with tempfile.NamedTemporaryFile(mode='w+', delete=False, suffix='.json') as temp_file:
+            json.dump(google_auth_data, temp_file)
+            temp_file_path = temp_file.name
+
         scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
-        credential = ServiceAccountCredentials.from_json_keyfile_name(google_auth_json_path, scope)
+        credential = ServiceAccountCredentials.from_json_keyfile_name(temp_file_path, scope)
         gc = gspread.authorize(credential)
         doc = gc.open_by_url(sheet_url)
         sheet = doc.worksheet(sheet_name)

@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import QThread, pyqtSignal
 from config import Config
 from enum import Enum
-from libcashdata import *
+from libcashdata import CashData
 from dataclasses import dataclass
 from util import setup_logger
 from sellper_ui import Ui_widget
@@ -27,9 +27,9 @@ class SELECT(Enum):
 class WORKER_PARAM:
     type_: TYPE
     select_: SELECT
-    param_1: int
-    param_2: int
-    market_dict: dict
+    param_1: int = 0
+    param_2: int = 0
+    market_dict: dict = None
 
 config = Config()
 
@@ -43,18 +43,16 @@ class Worker(QThread):
 
     def run(self):
         logger.info(f"Thread 실행: type:{self.menu['type']} select:{self.menu['select']}")
-        if self.menu["select"] is SELECT.OPEN_N:
-            self._run_open_n()
-        elif self.menu["select"] is SELECT.UPDATE_MARKET:
-            self._update_market_info()
-        elif self.menu["select"] is SELECT.CREATE_LIST:
-            self._create_list()
-        elif self.menu["select"] is SELECT.SCRAP:
-            self._run_scrap()
-        elif self.menu['select'] is SELECT.DELETE:
-            self._delete()
-        elif self.menu["select"] is SELECT.UPLOAD:
-            self._upload_list()
+        select_action = {
+            SELECT.OPEN_N: self._run_open_n,
+            SELECT.UPDATE_MARKET: self._update_market_info,
+            SELECT.CREATE_LIST: self._create_list,
+            SELECT.SCRAP: self._run_scrap,
+            SELECT.DELETE: self._delete,
+            SELECT.UPLOAD: self._upload_list
+        }
+        action = select_action.get(self.menu["select"])
+        if action: action()
         self.finished.emit()
 
     def _run_open_n(self):
@@ -76,7 +74,7 @@ class Worker(QThread):
                 if self.param.market_dict[market]:
                     nickname = dict_['계정정보'][i]
                     market_id, market_pw = dict_[market][i].split('\n')
-                    target_name = f"{i+1}번_{market}_{nickname}"
+                    target_name = f"{market}_{nickname}"
                     logger.info(f"  마켓 계정 업데이트: {target_name} {market_id} {market_pw}")
                     cashdata.run_update_market_info(target_name, market_pw)
 
@@ -99,10 +97,13 @@ class Worker(QThread):
                     'category_name': dict_['카테고리'][i],
                     'tag_name': dict_['검색태그'][i],
                     'price_type': price_type,
-                    'price_filter': dict_['가격필터'][i],
+                    'price_filter_isuse': dict_['가격필터사용'][i],
+                    'price_filter_start': dict_['가격필터-시작'][i],
+                    'price_filter_end': dict_['가격필터-끝'][i],
+                    'price_filter_inc': dict_['가격필터-증가'][i],
                     'page_start': dict_['시작페이지'][i],
                     'page_end': dict_['마지막페이지'][i],
-                    'num_scrap': dict_['수집개수'][i],
+                    'num_scrap': dict_['수량옵션'][i],
                     'exchange_rate': dict_['환율'][i],
                     'plus_rate': dict_['추가금액비율'][i],
                     'plus_money': dict_['추가금액'][i]
@@ -134,7 +135,7 @@ class Worker(QThread):
                     cashdata.run_cashdata()
                     nickname = dict_['계정정보'][i]
                     market_id, market_pw = dict_[market][i].split('\n')
-                    target_name = f"{i+1}번_{market}_{nickname}"
+                    target_name = f"{market}_{nickname}"
                     logger.info(f"  로그인: {target_name}") 
                     cashdata.run_market_login(target_name)
                     cashdata.run_delete(market, market_id)
@@ -148,7 +149,9 @@ class Worker(QThread):
         for i in range(start_, end_ + 1):
             cashdata = CashData()
             cashdata.run_cashdata()
-            target_name = f"{dict_['사업자'][i]}번_{dict_['마켓'][i]}_{login_dict['계정정보'][int(dict_['사업자'][i])-1]}"
+            nicknmae = login_dict['계정정보'][int(dict_['사업자'][i])-1]
+            market = dict_['마켓'][i]
+            target_name = f"{market}_{nicknmae}"
             logger.info(f"  로그인: {target_name}")            
             cashdata.run_market_login(target_name)
             target_list_name = f"{dict_['리스트명'][i]}"
@@ -162,20 +165,20 @@ class WindowClass(QMainWindow, Ui_widget):
         self.setupUi(self)
         self.menu = {"type": None, "select": None}
         self.login = {"id":None, "pw":None, "success":False}
-        self.pushButton_login.clicked.connect(self.handle_login)
-        # 라디오 버튼 이벤트 연결
-        self._connect_radio_buttons()
-        self.pushButton_run.clicked.connect(self.run_main)
         self.worker = None
+
+        self._connect_events()
+    
+    def _connect_events(self):
+        self.pushButton_login.clicked.connect(self.handle_login)
+        self.pushButton_run.clicked.connect(self.run_main)
+        self._connect_radio_buttons()
+        
     def handle_login(self):
-        user_id = self.lineEdit_id.text()
-        user_pw = self.lineEdit_pw.text()
-        if self.clslogin.verify_login(user_id, user_pw):
-            self.login = {"id":user_id, "pw":user_pw, "success":True}
-            QMessageBox.information(self, "로그인", "로그인 성공")
-        else:
-            self.login = {"id":user_id, "pw":user_pw, "success":False}
-            QMessageBox.information(self, "로그인", "로그인 실패")
+        user_id, user_pw = self.lineEdit_id.text(), self.lineEdit_pw.text()
+        self.login["success"] = self.clslogin.verify_login(user_id, user_pw)
+        QMessageBox.information(self, "로그인", "로그인 성공" if self.login["success"] else "로그인 실패")
+
 
     def _connect_radio_buttons(self):
         self.radioButton_open_n.clicked.connect(self.choose_menu)

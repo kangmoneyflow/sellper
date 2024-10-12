@@ -51,7 +51,7 @@ class LOGIN:
         if cls.login_sheets_dict is None:
             cls.login_sheets_dict = {}
         if sheet_type not in cls.login_sheets_dict:
-            login_sheet_url =  "https://docs.google.com/spreadsheets/d/1jki6UStOQj9Dq7ox3wSAAttL1NkeDSvTD5aDkVofVAA/edit?gid=0#gid=0"
+            login_sheet_url =  "https://docs.google.com/spreadsheets/d/1zGZiq6yU5PNYuke7xcOX_-TXYf6cT-FHjLaGMewXeHs/edit?gid=0#gid=0"
             cls.login_sheets_dict[sheet_type] = cls._get_google_sheet(login_sheet_url, sheet_type)
             logger.info(f"{sheet_type} sheet loaded")
         return cls.login_sheets_dict[sheet_type]

@@ -337,8 +337,11 @@ class CashData:
         self.app.dlg.child_window(title="수집 이름을 설정해주세요.", control_type="Text").wrapper_object().click_input()
         self.remove_curr_text()
         list_name = create_option['list_name']
-        tmp = create_option['price_filter']
-        list_name = f"{list_name}{tmp}/{create_option['price_type']}"
+        tmp = "X/"
+        if create_option['price_filter_isuse'].upper() == 'O':
+            tmp = f"{create_option['price_filter_start']}-{create_option['price_filter_end']}/"
+        list_name = f"{list_name}/{tmp}{create_option['price_type']}"
+        list_name = list_name.replace("//", "/")
         self.copy_and_paste(list_name)
 
         pyautogui.press('tab', 1) #통합 카테고리 (업로드 시 적용)
@@ -371,9 +374,8 @@ class CashData:
         price_row = ""
         price_high = ""
         price_interval = ""
-        if create_option['price_filter'] != "-": 
-            price_row, price_high = create_option['price_filter'].split('to')
-            price_interval = int((int(price_high)-int(price_row)))//2
+        if create_option['price_filter_isuse'].upper() != "X": 
+            price_row, price_high, price_interval = create_option['price_filter_start'], create_option['price_filter_end'], create_option['price_filter_inc']
         self.remove_curr_text()
         self.copy_and_paste(price_row)         
         pyautogui.press('tab', 1)
