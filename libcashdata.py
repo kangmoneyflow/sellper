@@ -22,7 +22,7 @@ class CashData:
 
     def run_cashdata(self):
         logger.info(f"Cashdata 실행: {self.run_path}")
-        os.system(self.run_path)
+        os.startfile(self.run_path)
         time.sleep(TIME_DELAY_2)
 
         proc_pid = self._get_pid()

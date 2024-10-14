@@ -5,6 +5,7 @@ import gspread
 import pandas as pd
 from util import setup_logger
 import tempfile
+import winreg
 
 logger = setup_logger(__name__)
 
@@ -21,20 +22,34 @@ class Config:
             logger.info("Config Class Initialization")
             cls._initialize()
         return super(Config, cls).__new__(cls)
+    
+    @classmethod
+    def get_desktop_path(cls):
+        # 레지스트리에서 경로 가져오기 (OneDrive 여부 포함)
+        try:
+            key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, r"Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders")
+            desktop, _ = winreg.QueryValueEx(key, "Desktop")
+            winreg.CloseKey(key)
+            return os.path.expandvars(desktop)
+        except Exception as e:
+            print(f"에러 발생: {e}")
+            # 기본 경로 시도
+            return os.path.join(os.path.expanduser("~"), "Desktop")
 
     @classmethod
     def _initialize(cls):
         try:
             with open(cls.config_path, 'r', encoding='utf-8') as f:
                 config_data = json.load(f)
-                config_data['cashdata']['path'] = config_data['cashdata']['path'].replace('home_path', os.path.expanduser('~'))
-                # config_data['google']['path'] = os.path.join(cls.base_dir, "google_auth.json")
+                desktop_path = cls.get_desktop_path()
+                if 'cashdata' not in config_data:
+                    config_data['cashdata'] = {}
+                config_data['cashdata']['path'] = os.path.join(desktop_path, "캐시데이터3.appref-ms")
                 cls.config_data = config_data
         except FileNotFoundError:
             logger.error(f"Error: {cls.config_path} / config.json 파일을 찾을 수 없습니다.")
         except json.JSONDecodeError:
             logger.error(f"Error: {cls.config_path} / JSON 파일 형식이 올바르지 않습니다.")
-
 
     @classmethod
     def get_all_config(cls):
