@@ -8,6 +8,8 @@ from dataclasses import dataclass
 from util import setup_logger
 from sellper_ui import Ui_widget
 from liblogin import LOGIN
+from utilfile import ExcelHandler
+from sendtext import MessageSender
 
 logger = setup_logger(__name__)
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -22,6 +24,9 @@ class SELECT(Enum):
     SCRAP = 4
     DELETE = 5
     UPLOAD = 6
+    TEXT = 7
+    FAKE = 8
+    POST = 9
 
 @dataclass
 class WORKER_PARAM:
@@ -30,6 +35,7 @@ class WORKER_PARAM:
     param_1: int = 0
     param_2: int = 0
     market_dict: dict = None
+    file_path: str = None
 
 config = Config()
 
@@ -49,7 +55,8 @@ class Worker(QThread):
             SELECT.CREATE_LIST: self._create_list,
             SELECT.SCRAP: self._run_scrap,
             SELECT.DELETE: self._delete,
-            SELECT.UPLOAD: self._upload_list
+            SELECT.UPLOAD: self._upload_list,
+            SELECT.TEXT: self._send_text
         }
         action = select_action.get(self.menu["select"])
         if action: action()
@@ -157,6 +164,28 @@ class Worker(QThread):
             target_list_name = f"{dict_['리스트명'][i]}"
             logger.info(f"  스프레드시트[{i+2}] {target_list_name}")                        
             cashdata.run_upload(target_list_name)
+    
+    def _send_text(self):
+        logger.info(f"파일 경로: {self.param.file_path}")
+        excel_handler = ExcelHandler(filepath=self.param.file_path)
+        if not excel_handler.ws:
+            logger.info("워크북 로드 실패 또는 시트가 존재하지 않습니다.")
+            return
+        data_dict = {}
+        for row in excel_handler.ws.iter_rows(min_row=2, values_only=True):  # 첫 행은 헤더로 처리
+            logger.info(f"{row}")
+            passport, mall, setter, setter_phone, getter, getter_phone, item = row
+            if passport != "": continue
+            if setter_phone not in data_dict:
+                data_dict[setter_phone] = [mall, setter, item]
+            if getter_phone not in data_dict:
+                data_dict[getter_phone] = [mall, getter, item]
+
+        user_data_path = "./message"
+        user_data_path = os.path.abspath(user_data_path)
+        sender = MessageSender(user_data_path)
+        sender.send_messages_to_all(data_dict)   
+
 
 class WindowClass(QMainWindow, Ui_widget):
     def __init__(self):
@@ -166,13 +195,19 @@ class WindowClass(QMainWindow, Ui_widget):
         self.menu = {"type": None, "select": None}
         self.login = {"id":None, "pw":None, "success":False}
         self.worker = None
+        self.file_path = None
 
         self._connect_events()
     
     def _connect_events(self):
+        self.pushButton_main.clicked.connect(self.gotomain)
         self.pushButton_login.clicked.connect(self.handle_login)
         self.pushButton_run.clicked.connect(self.run_main)
+        self.pushButton_open_file.clicked.connect(self.open_file_dialog)
         self._connect_radio_buttons()
+    
+    def gotomain(self):
+        self.stackedWidget.setCurrentIndex(0)
         
     def handle_login(self):
         user_id, user_pw = self.lineEdit_id.text(), self.lineEdit_pw.text()
@@ -187,7 +222,10 @@ class WindowClass(QMainWindow, Ui_widget):
         self.radioButton_run_scrap.clicked.connect(self.choose_menu)
         self.radioButton_delete_market.clicked.connect(self.choose_menu)
         self.radioButton_upload_market.clicked.connect(self.choose_menu)
-
+        self.radioButton_send_text.clicked.connect(self.choose_menu)
+        self.radioButton_write_fakepost.clicked.connect(self.choose_menu)
+        self.radioButton_check_post.clicked.connect(self.choose_menu)
+        
     def choose_menu(self):
         if not self.login["success"]:
             QMessageBox.information(self, "로그인", "로그인이 필요합니다.")
@@ -195,27 +233,59 @@ class WindowClass(QMainWindow, Ui_widget):
         if self.radioButton_open_n.isChecked():
             logger.info("자동 N개 실행 선택")
             self.menu = {"type": TYPE.CASH, "select": SELECT.OPEN_N}
-            self.tabWidget.setCurrentIndex(1)
+            self.stackedWidget.setCurrentIndex(1)
         elif self.radioButton_update_market.isChecked():
             logger.info("계정 업데이트 선택")
             self.menu = {"type": TYPE.CASH, "select": SELECT.UPDATE_MARKET}
-            self.tabWidget.setCurrentIndex(2)
+            self.stackedWidget.setCurrentIndex(2)
         elif self.radioButton_create_list.isChecked():
             logger.info("수집 리스트 생성 선택")
             self.menu = {"type": TYPE.CASH, "select": SELECT.CREATE_LIST}
-            self.tabWidget.setCurrentIndex(3)
+            self.stackedWidget.setCurrentIndex(3)
         elif self.radioButton_run_scrap.isChecked():
             logger.info("수집 실행 선택")
             self.menu = {"type": TYPE.CASH, "select": SELECT.SCRAP}
-            self.tabWidget.setCurrentIndex(4)
+            self.stackedWidget.setCurrentIndex(4)
         elif self.radioButton_delete_market.isChecked():
-            logger.info("연동 삭제 선택")
+            logger.info("마켓 연동 삭제 선택")
             self.menu = {"type": TYPE.CASH, "select": SELECT.DELETE}
-            self.tabWidget.setCurrentIndex(5)
+            self.stackedWidget.setCurrentIndex(5)
         elif self.radioButton_upload_market.isChecked():
-            logger.info("업로드 선택")
+            logger.info("마켓 업로드 선택")
             self.menu = {"type": TYPE.CASH, "select": SELECT.UPLOAD}
-            self.tabWidget.setCurrentIndex(6)            
+            self.stackedWidget.setCurrentIndex(6)
+        elif self.radioButton_send_text.isChecked():
+            logger.info("대량 문자 발송 선택")
+            self.menu = {"type": TYPE.CASH, "select": SELECT.TEXT}
+            self.stackedWidget.setCurrentIndex(7)
+        elif self.radioButton_write_fakepost.isChecked():
+            logger.info("가송장 입력 선택")
+            self.menu = {"type": TYPE.CASH, "select": SELECT.FAKE}
+            self.stackedWidget.setCurrentIndex(8)            
+        elif self.radioButton_check_post.isChecked():
+            logger.info("배송 점검 선택")
+            self.menu = {"type": TYPE.CASH, "select": SELECT.FAKE}
+            self.stackedWidget.setCurrentIndex(9) 
+            
+    def open_file_dialog(self):
+        try:
+            options = QFileDialog.Options()
+            options = QFileDialog.Options()
+            options |= QFileDialog.DontUseNativeDialog  # 네이티브 다이얼로그 비활성화
+            fname, _ = QFileDialog.getOpenFileName(
+                self,
+                "Open File",
+                ".",
+                "All Files (*);;Text Files (*.txt)",
+                options=options
+            )
+            if fname:
+                self.file_path = fname
+                logger.info(f"open file 경로: {fname}")
+            else:
+                logger.info("파일이 선택되지 않았습니다. 다시 파일을 선택해 주세요.")
+        except Exception as e:
+            logger.info(f"오류 발생: {str(e)}")
 
     def run_main(self):
         if not self.login["success"]:
@@ -229,7 +299,7 @@ class WindowClass(QMainWindow, Ui_widget):
             return
 
         param = self._create_param()
-        logger.info(f"실행 준비: param1 {param.param_1}, param2 {param.param_2}, market_dict {param.market_dict}")
+        logger.info(f"실행 준비: param1 {param.param_1}, param2 {param.param_2}, market_dict {param.market_dict}, file_path {param.file_path}")
         self.worker = Worker(param)
         self.worker.finished.connect(self.on_worker_finished)
         self.worker.start()
@@ -240,21 +310,20 @@ class WindowClass(QMainWindow, Ui_widget):
             select_=self.menu['select'],
             param_1=99,
             param_2=99,
-            market_dict={"스마트스토어": False, "쿠팡": False, "지마켓": False, "옥션": False, "11번가": False, "롯데온": False}
+            market_dict={"스마트스토어": False, "쿠팡": False, "지마켓": False, "옥션": False, "11번가": False, "롯데온": False},
+            file_path=None
         )
-
-        if self.menu["select"] is SELECT.OPEN_N:
-            param.param_1 = self.sel_1_num.value()
-        # elif self.menu["select"] is {SELECT.UPDATE_MARKET, SELECT.DELETE}:
-        #     param.param_1 = self.sel_2_start.value()
-        #     param.param_2 = self.sel_2_end.value()
-        #     self._update_market_dict(param)
-        elif self.menu["select"] in {SELECT.CREATE_LIST, SELECT.SCRAP, SELECT.UPLOAD, SELECT.UPDATE_MARKET, SELECT.DELETE}:
+        
+        if self.menu["select"] in {SELECT.OPEN_N, SELECT.CREATE_LIST, SELECT.SCRAP, SELECT.UPLOAD, SELECT.UPDATE_MARKET, SELECT.DELETE}:
             param.param_1 = getattr(self, f"sel_{self.menu['select'].value}_start").value()
-            param.param_2 = getattr(self, f"sel_{self.menu['select'].value}_end").value()
+            if self.menu["select"] is not SELECT.OPEN_N:
+                param.param_2 = getattr(self, f"sel_{self.menu['select'].value}_end").value()
 
         if self.menu["select"] in {SELECT.UPDATE_MARKET, SELECT.DELETE}:
             self._update_market_dict(param)
+
+        if self.file_path:
+            param.file_path = self.file_path
 
         return param
 
@@ -277,6 +346,7 @@ class WindowClass(QMainWindow, Ui_widget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+    app.setStyle("Fusion")
     myWindow = WindowClass()
     myWindow.show()
-    app.exec_()
+    sys.exit(app.exec_())

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>586</width>
-    <height>224</height>
+    <width>523</width>
+    <height>292</height>
    </rect>
   </property>
   <property name="font">
@@ -21,10 +21,10 @@
   <widget class="QGroupBox" name="groupBox_cash">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>25</y>
+     <x>23</x>
+     <y>14</y>
      <width>151</width>
-     <height>151</height>
+     <height>231</height>
     </rect>
    </property>
    <property name="font">
@@ -49,9 +49,9 @@
    <widget class="QRadioButton" name="radioButton_open_n">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>20</y>
-      <width>201</width>
+      <x>21</x>
+      <y>27</y>
+      <width>100</width>
       <height>16</height>
      </rect>
     </property>
@@ -62,9 +62,9 @@
    <widget class="QRadioButton" name="radioButton_update_market">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>40</y>
-      <width>181</width>
+      <x>21</x>
+      <y>49</y>
+      <width>99</width>
       <height>16</height>
      </rect>
     </property>
@@ -75,9 +75,9 @@
    <widget class="QRadioButton" name="radioButton_create_list">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>60</y>
-      <width>161</width>
+      <x>21</x>
+      <y>71</y>
+      <width>115</width>
       <height>16</height>
      </rect>
     </property>
@@ -88,9 +88,9 @@
    <widget class="QRadioButton" name="radioButton_run_scrap">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>80</y>
-      <width>131</width>
+      <x>21</x>
+      <y>93</y>
+      <width>75</width>
       <height>16</height>
      </rect>
     </property>
@@ -101,9 +101,9 @@
    <widget class="QRadioButton" name="radioButton_delete_market">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>100</y>
-      <width>161</width>
+      <x>21</x>
+      <y>115</y>
+      <width>103</width>
       <height>16</height>
      </rect>
     </property>
@@ -114,9 +114,9 @@
    <widget class="QRadioButton" name="radioButton_upload_market">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>120</y>
-      <width>90</width>
+      <x>21</x>
+      <y>137</y>
+      <width>87</width>
       <height>16</height>
      </rect>
     </property>
@@ -124,67 +124,90 @@
      <string>마켓 업로드</string>
     </property>
    </widget>
+   <widget class="QRadioButton" name="radioButton_send_text">
+    <property name="geometry">
+     <rect>
+      <x>21</x>
+      <y>159</y>
+      <width>103</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>대량 문자 발송</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="radioButton_write_fakepost">
+    <property name="geometry">
+     <rect>
+      <x>21</x>
+      <y>181</y>
+      <width>87</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>가송장 입력</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="radioButton_check_post">
+    <property name="geometry">
+     <rect>
+      <x>21</x>
+      <y>203</y>
+      <width>75</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>배송 점검</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QPushButton" name="pushButton_run">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>190</y>
-     <width>71</width>
-     <height>21</height>
+     <x>20</x>
+     <y>254</y>
+     <width>75</width>
+     <height>23</height>
     </rect>
    </property>
    <property name="text">
     <string>실행</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_clear">
+  <widget class="QPushButton" name="pushButton_main">
    <property name="geometry">
     <rect>
-     <x>90</x>
-     <y>190</y>
-     <width>71</width>
-     <height>21</height>
+     <x>101</x>
+     <y>254</y>
+     <width>75</width>
+     <height>23</height>
     </rect>
    </property>
    <property name="text">
-    <string>초기화</string>
+    <string>메인</string>
    </property>
   </widget>
-  <widget class="QTabWidget" name="tabWidget">
+  <widget class="QStackedWidget" name="stackedWidget">
    <property name="geometry">
     <rect>
-     <x>180</x>
-     <y>20</y>
-     <width>391</width>
-     <height>191</height>
+     <x>200</x>
+     <y>10</y>
+     <width>301</width>
+     <height>231</height>
     </rect>
    </property>
    <property name="currentIndex">
     <number>0</number>
    </property>
-   <widget class="QWidget" name="tab_7">
-    <attribute name="title">
-     <string>메인</string>
-    </attribute>
-    <widget class="QLabel" name="label_2">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>136</y>
-       <width>341</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>연락처 kangmoneyflow@gmail.com</string>
-     </property>
-    </widget>
+   <widget class="QWidget" name="stackedWidgetPage1">
     <widget class="QLineEdit" name="lineEdit_id">
      <property name="geometry">
       <rect>
-       <x>70</x>
-       <y>20</y>
+       <x>109</x>
+       <y>75</y>
        <width>111</width>
        <height>20</height>
       </rect>
@@ -193,8 +216,8 @@
     <widget class="QLineEdit" name="lineEdit_pw">
      <property name="geometry">
       <rect>
-       <x>70</x>
-       <y>60</y>
+       <x>109</x>
+       <y>105</y>
        <width>111</width>
        <height>20</height>
       </rect>
@@ -203,8 +226,8 @@
     <widget class="QLabel" name="label_11">
      <property name="geometry">
       <rect>
-       <x>11</x>
-       <y>25</y>
+       <x>50</x>
+       <y>80</y>
        <width>56</width>
        <height>12</height>
       </rect>
@@ -219,8 +242,8 @@
     <widget class="QLabel" name="label_12">
      <property name="geometry">
       <rect>
-       <x>12</x>
-       <y>64</y>
+       <x>51</x>
+       <y>109</y>
        <width>56</width>
        <height>12</height>
       </rect>
@@ -235,8 +258,8 @@
     <widget class="QPushButton" name="pushButton_new">
      <property name="geometry">
       <rect>
-       <x>13</x>
-       <y>100</y>
+       <x>49</x>
+       <y>140</y>
        <width>81</width>
        <height>23</height>
       </rect>
@@ -248,8 +271,8 @@
     <widget class="QPushButton" name="pushButton_login">
      <property name="geometry">
       <rect>
-       <x>99</x>
-       <y>100</y>
+       <x>135</x>
+       <y>140</y>
        <width>81</width>
        <height>23</height>
       </rect>
@@ -258,44 +281,15 @@
       <string>로그인</string>
      </property>
     </widget>
-    <widget class="QLineEdit" name="lineEdit_url">
-     <property name="geometry">
-      <rect>
-       <x>246</x>
-       <y>20</y>
-       <width>111</width>
-       <height>20</height>
-      </rect>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_13">
-     <property name="geometry">
-      <rect>
-       <x>187</x>
-       <y>25</y>
-       <width>56</width>
-       <height>12</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>URL</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
    </widget>
-   <widget class="QWidget" name="tab">
-    <attribute name="title">
-     <string>기능1</string>
-    </attribute>
+   <widget class="QWidget" name="stackedWidgetPage2">
     <widget class="QSpinBox" name="sel_1_num">
      <property name="geometry">
       <rect>
-       <x>40</x>
-       <y>10</y>
-       <width>51</width>
-       <height>31</height>
+       <x>41</x>
+       <y>19</y>
+       <width>40</width>
+       <height>20</height>
       </rect>
      </property>
      <property name="minimum">
@@ -308,10 +302,10 @@
     <widget class="QLabel" name="label">
      <property name="geometry">
       <rect>
-       <x>10</x>
-       <y>20</y>
-       <width>56</width>
-       <height>12</height>
+       <x>3</x>
+       <y>21</y>
+       <width>24</width>
+       <height>16</height>
       </rect>
      </property>
      <property name="text">
@@ -319,17 +313,14 @@
      </property>
     </widget>
    </widget>
-   <widget class="QWidget" name="tab_2">
-    <attribute name="title">
-     <string>기능2</string>
-    </attribute>
+   <widget class="QWidget" name="stackedWidgetPage3">
     <widget class="QSpinBox" name="sel_2_start">
      <property name="geometry">
       <rect>
-       <x>47</x>
-       <y>10</y>
-       <width>51</width>
-       <height>31</height>
+       <x>41</x>
+       <y>19</y>
+       <width>40</width>
+       <height>20</height>
       </rect>
      </property>
      <property name="minimum">
@@ -345,10 +336,10 @@
     <widget class="QLabel" name="label_7">
      <property name="geometry">
       <rect>
-       <x>110</x>
-       <y>20</y>
-       <width>56</width>
-       <height>12</height>
+       <x>3</x>
+       <y>54</y>
+       <width>24</width>
+       <height>16</height>
       </rect>
      </property>
      <property name="text">
@@ -358,10 +349,10 @@
     <widget class="QLabel" name="label_8">
      <property name="geometry">
       <rect>
-       <x>10</x>
-       <y>20</y>
-       <width>56</width>
-       <height>12</height>
+       <x>3</x>
+       <y>21</y>
+       <width>24</width>
+       <height>16</height>
       </rect>
      </property>
      <property name="text">
@@ -371,10 +362,10 @@
     <widget class="QSpinBox" name="sel_2_end">
      <property name="geometry">
       <rect>
-       <x>148</x>
-       <y>10</y>
-       <width>51</width>
-       <height>31</height>
+       <x>41</x>
+       <y>52</y>
+       <width>40</width>
+       <height>20</height>
       </rect>
      </property>
      <property name="minimum">
@@ -390,9 +381,9 @@
     <widget class="QCheckBox" name="checkBox_2_ss">
      <property name="geometry">
       <rect>
-       <x>230</x>
-       <y>11</y>
-       <width>111</width>
+       <x>111</x>
+       <y>21</y>
+       <width>95</width>
        <height>16</height>
       </rect>
      </property>
@@ -403,9 +394,9 @@
     <widget class="QCheckBox" name="checkBox_2_cp">
      <property name="geometry">
       <rect>
-       <x>230</x>
-       <y>30</y>
-       <width>111</width>
+       <x>111</x>
+       <y>43</y>
+       <width>47</width>
        <height>16</height>
       </rect>
      </property>
@@ -416,9 +407,9 @@
     <widget class="QCheckBox" name="checkBox_2_g">
      <property name="geometry">
       <rect>
-       <x>230</x>
-       <y>50</y>
-       <width>111</width>
+       <x>111</x>
+       <y>65</y>
+       <width>59</width>
        <height>16</height>
       </rect>
      </property>
@@ -429,9 +420,9 @@
     <widget class="QCheckBox" name="checkBox_2_a">
      <property name="geometry">
       <rect>
-       <x>230</x>
-       <y>70</y>
-       <width>111</width>
+       <x>111</x>
+       <y>87</y>
+       <width>47</width>
        <height>16</height>
       </rect>
      </property>
@@ -442,9 +433,9 @@
     <widget class="QCheckBox" name="checkBox_2_st11">
      <property name="geometry">
       <rect>
-       <x>230</x>
-       <y>90</y>
-       <width>111</width>
+       <x>111</x>
+       <y>109</y>
+       <width>59</width>
        <height>16</height>
       </rect>
      </property>
@@ -455,9 +446,9 @@
     <widget class="QCheckBox" name="checkBox_2_l">
      <property name="geometry">
       <rect>
-       <x>230</x>
-       <y>110</y>
-       <width>111</width>
+       <x>111</x>
+       <y>131</y>
+       <width>59</width>
        <height>16</height>
       </rect>
      </property>
@@ -466,30 +457,14 @@
      </property>
     </widget>
    </widget>
-   <widget class="QWidget" name="tab_3">
-    <attribute name="title">
-     <string>기능3</string>
-    </attribute>
-    <widget class="QLabel" name="label_9">
-     <property name="geometry">
-      <rect>
-       <x>12</x>
-       <y>20</y>
-       <width>56</width>
-       <height>12</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>시작</string>
-     </property>
-    </widget>
+   <widget class="QWidget" name="stackedWidgetPage4">
     <widget class="QSpinBox" name="sel_3_start">
      <property name="geometry">
       <rect>
-       <x>49</x>
-       <y>10</y>
-       <width>51</width>
-       <height>31</height>
+       <x>41</x>
+       <y>19</y>
+       <width>40</width>
+       <height>20</height>
       </rect>
      </property>
      <property name="minimum">
@@ -505,26 +480,13 @@
       <number>2</number>
      </property>
     </widget>
-    <widget class="QLabel" name="label_10">
-     <property name="geometry">
-      <rect>
-       <x>112</x>
-       <y>20</y>
-       <width>56</width>
-       <height>12</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>종료</string>
-     </property>
-    </widget>
     <widget class="QSpinBox" name="sel_3_end">
      <property name="geometry">
       <rect>
-       <x>150</x>
-       <y>10</y>
-       <width>51</width>
-       <height>31</height>
+       <x>41</x>
+       <y>52</y>
+       <width>40</width>
+       <height>20</height>
       </rect>
      </property>
      <property name="minimum">
@@ -537,18 +499,41 @@
       <number>2</number>
      </property>
     </widget>
+    <widget class="QLabel" name="label_9">
+     <property name="geometry">
+      <rect>
+       <x>3</x>
+       <y>54</y>
+       <width>24</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>종료</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_10">
+     <property name="geometry">
+      <rect>
+       <x>3</x>
+       <y>21</y>
+       <width>24</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>시작</string>
+     </property>
+    </widget>
    </widget>
-   <widget class="QWidget" name="tab_4">
-    <attribute name="title">
-     <string>기능4</string>
-    </attribute>
+   <widget class="QWidget" name="stackedWidgetPage5">
     <widget class="QSpinBox" name="sel_4_end">
      <property name="geometry">
       <rect>
-       <x>151</x>
-       <y>10</y>
-       <width>51</width>
-       <height>31</height>
+       <x>41</x>
+       <y>52</y>
+       <width>40</width>
+       <height>20</height>
       </rect>
      </property>
      <property name="minimum">
@@ -561,10 +546,10 @@
     <widget class="QSpinBox" name="sel_4_start">
      <property name="geometry">
       <rect>
-       <x>50</x>
-       <y>10</y>
-       <width>51</width>
-       <height>31</height>
+       <x>41</x>
+       <y>19</y>
+       <width>40</width>
+       <height>20</height>
       </rect>
      </property>
      <property name="minimum">
@@ -577,10 +562,10 @@
     <widget class="QLabel" name="label_3">
      <property name="geometry">
       <rect>
-       <x>13</x>
-       <y>20</y>
-       <width>56</width>
-       <height>12</height>
+       <x>3</x>
+       <y>21</y>
+       <width>24</width>
+       <height>16</height>
       </rect>
      </property>
      <property name="text">
@@ -590,10 +575,10 @@
     <widget class="QLabel" name="label_4">
      <property name="geometry">
       <rect>
-       <x>113</x>
-       <y>20</y>
-       <width>56</width>
-       <height>12</height>
+       <x>3</x>
+       <y>54</y>
+       <width>24</width>
+       <height>16</height>
       </rect>
      </property>
      <property name="text">
@@ -601,17 +586,14 @@
      </property>
     </widget>
    </widget>
-   <widget class="QWidget" name="tab_5">
-    <attribute name="title">
-     <string>기능5</string>
-    </attribute>
+   <widget class="QWidget" name="stackedWidgetPage6">
     <widget class="QLabel" name="label_14">
      <property name="geometry">
       <rect>
-       <x>110</x>
-       <y>20</y>
-       <width>56</width>
-       <height>12</height>
+       <x>3</x>
+       <y>54</y>
+       <width>24</width>
+       <height>16</height>
       </rect>
      </property>
      <property name="text">
@@ -621,9 +603,9 @@
     <widget class="QCheckBox" name="checkBox_5_g">
      <property name="geometry">
       <rect>
-       <x>230</x>
-       <y>50</y>
-       <width>111</width>
+       <x>111</x>
+       <y>65</y>
+       <width>59</width>
        <height>16</height>
       </rect>
      </property>
@@ -634,9 +616,9 @@
     <widget class="QCheckBox" name="checkBox_5_a">
      <property name="geometry">
       <rect>
-       <x>230</x>
-       <y>70</y>
-       <width>111</width>
+       <x>111</x>
+       <y>87</y>
+       <width>47</width>
        <height>16</height>
       </rect>
      </property>
@@ -647,9 +629,9 @@
     <widget class="QCheckBox" name="checkBox_5_l">
      <property name="geometry">
       <rect>
-       <x>230</x>
-       <y>110</y>
-       <width>111</width>
+       <x>111</x>
+       <y>131</y>
+       <width>59</width>
        <height>16</height>
       </rect>
      </property>
@@ -660,10 +642,10 @@
     <widget class="QSpinBox" name="sel_5_start">
      <property name="geometry">
       <rect>
-       <x>47</x>
-       <y>10</y>
-       <width>51</width>
-       <height>31</height>
+       <x>41</x>
+       <y>19</y>
+       <width>40</width>
+       <height>20</height>
       </rect>
      </property>
      <property name="minimum">
@@ -679,9 +661,9 @@
     <widget class="QCheckBox" name="checkBox_5_cp">
      <property name="geometry">
       <rect>
-       <x>230</x>
-       <y>30</y>
-       <width>111</width>
+       <x>111</x>
+       <y>43</y>
+       <width>47</width>
        <height>16</height>
       </rect>
      </property>
@@ -692,10 +674,10 @@
     <widget class="QLabel" name="label_delete_start">
      <property name="geometry">
       <rect>
-       <x>10</x>
-       <y>20</y>
-       <width>56</width>
-       <height>12</height>
+       <x>3</x>
+       <y>21</y>
+       <width>24</width>
+       <height>16</height>
       </rect>
      </property>
      <property name="text">
@@ -705,10 +687,10 @@
     <widget class="QSpinBox" name="sel_5_end">
      <property name="geometry">
       <rect>
-       <x>148</x>
-       <y>10</y>
-       <width>51</width>
-       <height>31</height>
+       <x>41</x>
+       <y>52</y>
+       <width>40</width>
+       <height>20</height>
       </rect>
      </property>
      <property name="minimum">
@@ -724,9 +706,9 @@
     <widget class="QCheckBox" name="checkBox_5_ss">
      <property name="geometry">
       <rect>
-       <x>230</x>
-       <y>11</y>
-       <width>111</width>
+       <x>111</x>
+       <y>21</y>
+       <width>95</width>
        <height>16</height>
       </rect>
      </property>
@@ -737,9 +719,9 @@
     <widget class="QCheckBox" name="checkBox_5_st11">
      <property name="geometry">
       <rect>
-       <x>230</x>
-       <y>90</y>
-       <width>111</width>
+       <x>111</x>
+       <y>109</y>
+       <width>59</width>
        <height>16</height>
       </rect>
      </property>
@@ -748,17 +730,14 @@
      </property>
     </widget>
    </widget>
-   <widget class="QWidget" name="tab_6">
-    <attribute name="title">
-     <string>기능6</string>
-    </attribute>
+   <widget class="QWidget" name="stackedWidgetPage7">
     <widget class="QSpinBox" name="sel_6_start">
      <property name="geometry">
       <rect>
-       <x>39</x>
-       <y>10</y>
-       <width>51</width>
-       <height>31</height>
+       <x>41</x>
+       <y>19</y>
+       <width>40</width>
+       <height>20</height>
       </rect>
      </property>
      <property name="minimum">
@@ -771,10 +750,10 @@
     <widget class="QLabel" name="label_5">
      <property name="geometry">
       <rect>
-       <x>102</x>
-       <y>20</y>
-       <width>56</width>
-       <height>12</height>
+       <x>3</x>
+       <y>54</y>
+       <width>24</width>
+       <height>16</height>
       </rect>
      </property>
      <property name="text">
@@ -784,10 +763,10 @@
     <widget class="QLabel" name="label_6">
      <property name="geometry">
       <rect>
-       <x>2</x>
-       <y>20</y>
-       <width>56</width>
-       <height>12</height>
+       <x>3</x>
+       <y>21</y>
+       <width>24</width>
+       <height>16</height>
       </rect>
      </property>
      <property name="text">
@@ -797,10 +776,10 @@
     <widget class="QSpinBox" name="sel_6_end">
      <property name="geometry">
       <rect>
-       <x>140</x>
-       <y>10</y>
-       <width>51</width>
-       <height>31</height>
+       <x>41</x>
+       <y>52</y>
+       <width>40</width>
+       <height>20</height>
       </rect>
      </property>
      <property name="minimum">
@@ -811,6 +790,37 @@
      </property>
     </widget>
    </widget>
+   <widget class="QWidget" name="stackedWidgetPage8">
+    <widget class="QPushButton" name="pushButton_open_file">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>20</y>
+       <width>75</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>파일 열기</string>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>190</x>
+     <y>250</y>
+     <width>301</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>kangmoneyflow@gmail.com</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
   </widget>
  </widget>
  <resources/>
