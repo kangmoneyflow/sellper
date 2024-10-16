@@ -1,6 +1,9 @@
+
 import sys, os
+from typing import Optional
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import QThread, pyqtSignal
+from PyQt5.QtGui import *
 from config import Config
 from enum import Enum
 from libcashdata import CashData
@@ -10,6 +13,7 @@ from sellper_ui import Ui_widget
 from liblogin import LOGIN
 from utilfile import ExcelHandler
 from sendtext import MessageSender
+import resources_rc
 
 logger = setup_logger(__name__)
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -36,6 +40,7 @@ class WORKER_PARAM:
     param_2: int = 0
     market_dict: dict = None
     file_path: str = None
+    text_edit_log: Optional[QTextEdit] = None  # QTextEdit 타입 지정
 
 config = Config()
 
@@ -183,7 +188,7 @@ class Worker(QThread):
 
         user_data_path = "./message"
         user_data_path = os.path.abspath(user_data_path)
-        sender = MessageSender(user_data_path)
+        sender = MessageSender(user_data_path, self.param.text_edit_log)
         sender.send_messages_to_all(data_dict)   
 
 
@@ -196,9 +201,11 @@ class WindowClass(QMainWindow, Ui_widget):
         self.login = {"id":None, "pw":None, "success":False}
         self.worker = None
         self.file_path = None
-
+        # self.label_cashimg.setPixmap(self.pixmap)
         self._connect_events()
-    
+
+        self.text_edit_log = self.findChild(QTextEdit, "textEdit_log")
+
     def _connect_events(self):
         self.pushButton_main.clicked.connect(self.gotomain)
         self.pushButton_login.clicked.connect(self.handle_login)
@@ -223,7 +230,6 @@ class WindowClass(QMainWindow, Ui_widget):
         self.radioButton_delete_market.clicked.connect(self.choose_menu)
         self.radioButton_upload_market.clicked.connect(self.choose_menu)
         self.radioButton_send_text.clicked.connect(self.choose_menu)
-        self.radioButton_write_fakepost.clicked.connect(self.choose_menu)
         self.radioButton_check_post.clicked.connect(self.choose_menu)
         
     def choose_menu(self):
@@ -258,14 +264,12 @@ class WindowClass(QMainWindow, Ui_widget):
             logger.info("대량 문자 발송 선택")
             self.menu = {"type": TYPE.CASH, "select": SELECT.TEXT}
             self.stackedWidget.setCurrentIndex(7)
-        elif self.radioButton_write_fakepost.isChecked():
-            logger.info("가송장 입력 선택")
-            self.menu = {"type": TYPE.CASH, "select": SELECT.FAKE}
-            self.stackedWidget.setCurrentIndex(8)            
         elif self.radioButton_check_post.isChecked():
+            QMessageBox.information(self, "미지원", "제한된 기능 입니다.")
+            return
             logger.info("배송 점검 선택")
             self.menu = {"type": TYPE.CASH, "select": SELECT.FAKE}
-            self.stackedWidget.setCurrentIndex(9) 
+            self.stackedWidget.setCurrentIndex(8) 
             
     def open_file_dialog(self):
         try:
@@ -311,7 +315,8 @@ class WindowClass(QMainWindow, Ui_widget):
             param_1=99,
             param_2=99,
             market_dict={"스마트스토어": False, "쿠팡": False, "지마켓": False, "옥션": False, "11번가": False, "롯데온": False},
-            file_path=None
+            file_path=None,
+            text_edit_log=None
         )
         
         if self.menu["select"] in {SELECT.OPEN_N, SELECT.CREATE_LIST, SELECT.SCRAP, SELECT.UPLOAD, SELECT.UPDATE_MARKET, SELECT.DELETE}:
@@ -322,8 +327,9 @@ class WindowClass(QMainWindow, Ui_widget):
         if self.menu["select"] in {SELECT.UPDATE_MARKET, SELECT.DELETE}:
             self._update_market_dict(param)
 
-        if self.file_path:
+        if self.menu["select"] in {SELECT.TEXT} and self.file_path:
             param.file_path = self.file_path
+            param.text_edit_log = self.text_edit_log
 
         return param
 

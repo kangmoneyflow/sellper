@@ -22,9 +22,9 @@
    <property name="geometry">
     <rect>
      <x>23</x>
-     <y>14</y>
+     <y>30</y>
      <width>151</width>
-     <height>231</height>
+     <height>211</height>
     </rect>
    </property>
    <property name="font">
@@ -137,24 +137,11 @@
      <string>대량 문자 발송</string>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton_write_fakepost">
-    <property name="geometry">
-     <rect>
-      <x>21</x>
-      <y>181</y>
-      <width>87</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>가송장 입력</string>
-    </property>
-   </widget>
    <widget class="QRadioButton" name="radioButton_check_post">
     <property name="geometry">
      <rect>
       <x>21</x>
-      <y>203</y>
+      <y>180</y>
       <width>75</width>
       <height>16</height>
      </rect>
@@ -196,7 +183,7 @@
      <x>200</x>
      <y>10</y>
      <width>301</width>
-     <height>231</height>
+     <height>241</height>
     </rect>
    </property>
    <property name="currentIndex">
@@ -206,8 +193,8 @@
     <widget class="QLineEdit" name="lineEdit_id">
      <property name="geometry">
       <rect>
-       <x>109</x>
-       <y>75</y>
+       <x>120</x>
+       <y>151</y>
        <width>111</width>
        <height>20</height>
       </rect>
@@ -216,8 +203,8 @@
     <widget class="QLineEdit" name="lineEdit_pw">
      <property name="geometry">
       <rect>
-       <x>109</x>
-       <y>105</y>
+       <x>120</x>
+       <y>181</y>
        <width>111</width>
        <height>20</height>
       </rect>
@@ -226,8 +213,8 @@
     <widget class="QLabel" name="label_11">
      <property name="geometry">
       <rect>
-       <x>50</x>
-       <y>80</y>
+       <x>61</x>
+       <y>156</y>
        <width>56</width>
        <height>12</height>
       </rect>
@@ -242,8 +229,8 @@
     <widget class="QLabel" name="label_12">
      <property name="geometry">
       <rect>
-       <x>51</x>
-       <y>109</y>
+       <x>62</x>
+       <y>185</y>
        <width>56</width>
        <height>12</height>
       </rect>
@@ -258,8 +245,8 @@
     <widget class="QPushButton" name="pushButton_new">
      <property name="geometry">
       <rect>
-       <x>49</x>
-       <y>140</y>
+       <x>60</x>
+       <y>216</y>
        <width>81</width>
        <height>23</height>
       </rect>
@@ -271,8 +258,8 @@
     <widget class="QPushButton" name="pushButton_login">
      <property name="geometry">
       <rect>
-       <x>135</x>
-       <y>140</y>
+       <x>146</x>
+       <y>216</y>
        <width>81</width>
        <height>23</height>
       </rect>
@@ -281,6 +268,29 @@
       <string>로그인</string>
      </property>
     </widget>
+    <widget class="QLabel" name="label_cashimg">
+     <property name="geometry">
+      <rect>
+       <x>60</x>
+       <y>-10</y>
+       <width>180</width>
+       <height>180</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">image: url(:/icon/캐시데이터.png);</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <zorder>pushButton_new</zorder>
+    <zorder>pushButton_login</zorder>
+    <zorder>label_cashimg</zorder>
+    <zorder>lineEdit_id</zorder>
+    <zorder>label_11</zorder>
+    <zorder>lineEdit_pw</zorder>
+    <zorder>label_12</zorder>
    </widget>
    <widget class="QWidget" name="stackedWidgetPage2">
     <widget class="QSpinBox" name="sel_1_num">
@@ -296,7 +306,7 @@
       <number>1</number>
      </property>
      <property name="maximum">
-      <number>999</number>
+      <number>9999</number>
      </property>
     </widget>
     <widget class="QLabel" name="label">
@@ -327,7 +337,7 @@
       <number>1</number>
      </property>
      <property name="maximum">
-      <number>999</number>
+      <number>9999</number>
      </property>
      <property name="value">
       <number>1</number>
@@ -372,7 +382,7 @@
       <number>1</number>
      </property>
      <property name="maximum">
-      <number>999</number>
+      <number>9999</number>
      </property>
      <property name="value">
       <number>1</number>
@@ -471,7 +481,7 @@
       <number>2</number>
      </property>
      <property name="maximum">
-      <number>999</number>
+      <number>9999</number>
      </property>
      <property name="singleStep">
       <number>1</number>
@@ -493,7 +503,7 @@
       <number>2</number>
      </property>
      <property name="maximum">
-      <number>999</number>
+      <number>9999</number>
      </property>
      <property name="value">
       <number>2</number>
@@ -540,7 +550,7 @@
       <number>2</number>
      </property>
      <property name="maximum">
-      <number>999</number>
+      <number>9999</number>
      </property>
     </widget>
     <widget class="QSpinBox" name="sel_4_start">
@@ -556,7 +566,7 @@
       <number>2</number>
      </property>
      <property name="maximum">
-      <number>999</number>
+      <number>9999</number>
      </property>
     </widget>
     <widget class="QLabel" name="label_3">
@@ -652,7 +662,7 @@
       <number>1</number>
      </property>
      <property name="maximum">
-      <number>999</number>
+      <number>9999</number>
      </property>
      <property name="value">
       <number>1</number>
@@ -697,7 +707,7 @@
       <number>1</number>
      </property>
      <property name="maximum">
-      <number>999</number>
+      <number>9999</number>
      </property>
      <property name="value">
       <number>1</number>
@@ -744,7 +754,7 @@
       <number>2</number>
      </property>
      <property name="maximum">
-      <number>999</number>
+      <number>9999</number>
      </property>
     </widget>
     <widget class="QLabel" name="label_5">
@@ -786,7 +796,7 @@
       <number>2</number>
      </property>
      <property name="maximum">
-      <number>999</number>
+      <number>9999</number>
      </property>
     </widget>
    </widget>
@@ -804,12 +814,22 @@
       <string>파일 열기</string>
      </property>
     </widget>
+    <widget class="QTextEdit" name="textEdit_log">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>50</y>
+       <width>301</width>
+       <height>181</height>
+      </rect>
+     </property>
+    </widget>
    </widget>
   </widget>
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>190</x>
+     <x>195</x>
      <y>250</y>
      <width>301</width>
      <height>31</height>
@@ -823,6 +843,8 @@
    </property>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
  <connections/>
 </ui>
