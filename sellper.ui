@@ -64,12 +64,12 @@
      <rect>
       <x>21</x>
       <y>49</y>
-      <width>99</width>
+      <width>121</width>
       <height>16</height>
      </rect>
     </property>
     <property name="text">
-     <string>계정 업데이트</string>
+     <string>로그인 업데이트</string>
     </property>
    </widget>
    <widget class="QRadioButton" name="radioButton_create_list">
@@ -142,12 +142,12 @@
      <rect>
       <x>21</x>
       <y>180</y>
-      <width>75</width>
+      <width>121</width>
       <height>16</height>
      </rect>
     </property>
     <property name="text">
-     <string>배송 점검</string>
+     <string>배송 업데이트</string>
     </property>
    </widget>
   </widget>

@@ -99,29 +99,29 @@ class Worker(QThread):
         logger.info(f"수집리스트 생성 시작: {self.param.param_1} - 종료: {self.param.param_2}")
         for i in range(start_, end_ + 1):
             logger.info(f"  [{i+2}] {dict_['리스트명'][i]}")
-            price_types = ['주문', '일치', '가격']
-            for j in range(len(price_types)):
-                price_type = price_types[j]
-                if dict_[price_type][i].upper() == 'X': continue
-                create_option = {
-                    'url': dict_['URL'][i],
-                    'list_name': dict_['리스트명'][i],
-                    'category_name': dict_['카테고리'][i],
-                    'tag_name': dict_['검색태그'][i],
-                    'price_type': price_type,
-                    'price_filter_isuse': dict_['가격필터사용'][i],
-                    'price_filter_start': dict_['가격필터-시작'][i],
-                    'price_filter_end': dict_['가격필터-끝'][i],
-                    'price_filter_inc': dict_['가격필터-증가'][i],
-                    'page_start': dict_['시작페이지'][i],
-                    'page_end': dict_['마지막페이지'][i],
-                    'num_scrap': dict_['수량옵션'][i],
-                    'exchange_rate': dict_['환율'][i],
-                    'plus_rate': dict_['추가금액비율'][i],
-                    'plus_money': dict_['추가금액'][i]
-                }
-                logger.info(f"  생성옵션: {create_option}")
-                cashdata.run_create_list(create_option)
+            # price_types = ['주문', '일치', '가격']
+            # for j in range(len(price_types)):
+                # price_type = price_types[j]
+                # if dict_[price_type][i].upper() == 'X': continue
+            create_option = {
+                'url': dict_['URL'][i],
+                'list_name': dict_['리스트명'][i],
+                'category_name': dict_['카테고리'][i],
+                'tag_name': dict_['검색태그'][i],
+                # 'price_type': price_type,
+                'price_filter_isuse': dict_['가격필터사용'][i],
+                'price_filter_start': dict_['가격필터-시작'][i],
+                'price_filter_end': dict_['가격필터-끝'][i],
+                'price_filter_inc': dict_['가격필터-증가'][i],
+                'page_start': dict_['시작페이지'][i],
+                'page_end': dict_['마지막페이지'][i],
+                'num_scrap': dict_['수량옵션'][i],
+                'exchange_rate': dict_['환율'][i],
+                'plus_rate': dict_['추가금액비율'][i],
+                'plus_money': dict_['추가금액'][i]
+            }
+            logger.info(f"  생성옵션: {create_option}")
+            cashdata.run_create_list(create_option)
 
     def _run_scrap(self):
         dict_ = config.get_cashdata_scrap_sheet()

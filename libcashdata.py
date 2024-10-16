@@ -330,17 +330,19 @@ class CashData:
         pyautogui.press('tab', 11) #11번 tab 이동하면, 수집 url 입니다. 창 시작함
         self.remove_curr_text()
         url = create_option['url']
-        if create_option['price_type'] == "주문":
-            url = f"{url}?g=y&sortType=total_tranpro_desc"
+        # if create_option['price_type'] == "주문":
+        #     url = f"{url}?g=y&sortType=total_tranpro_desc"
         self.copy_and_paste(url)
 
         self.app.dlg.child_window(title="수집 이름을 설정해주세요.", control_type="Text").wrapper_object().click_input()
         self.remove_curr_text()
         list_name = create_option['list_name']
-        tmp = "X/"
+        tmp = ""
         if create_option['price_filter_isuse'].upper() == 'O':
-            tmp = f"{create_option['price_filter_start']}-{create_option['price_filter_end']}/"
-        list_name = f"{list_name}/{tmp}{create_option['price_type']}"
+            tmp = f"/{create_option['price_filter_start']}-{create_option['price_filter_end']}"
+        # list_name = f"{list_name}/{tmp}{create_option['price_type']}"
+        list_name = f"{list_name}{tmp}"
+        
         list_name = list_name.replace("//", "/")
         self.copy_and_paste(list_name)
 
